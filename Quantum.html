@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+
+<title>Quantum Universe</title>
+
+<style>
+
+html,body{
+    margin:0;
+    overflow:hidden;
+    background:black;
+}
+
+canvas{
+    display:block;
+}
+
+#title{
+position:absolute;
+top:20px;
+width:100%;
+text-align:center;
+font-family:Arial;
+font-size:34px;
+letter-spacing:8px;
+color:white;
+text-shadow:
+0 0 10px #00ffff,
+0 0 25px #00ffff,
+0 0 50px #00ffff;
+z-index:100;
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="title">
+QUANTUM MULTIVERSE
+</div>
+
+<script type="module">
+
+import * as THREE from
+'https://cdn.jsdelivr.net/npm/three@0.162/build/three.module.js';
+
+/////////////////////////////////////////////////////////
+
+const scene = new THREE.Scene();
+
+scene.fog =
+new THREE.FogExp2(
+0x020510,
+0.009
+);
+
+/////////////////////////////////////////////////////////
+
+const camera =
+new THREE.PerspectiveCamera(
+45,
+1080/1350,
+0.1,
+5000
+);
+
+camera.position.z = 90;
+
+/////////////////////////////////////////////////////////
+
+const renderer =
+new THREE.WebGLRenderer({
+antialias:true
+});
+
+renderer.setSize(1080,1350);
+
+renderer.setPixelRatio(
+window.devicePixelRatio
+);
+
+renderer.toneMapping =
+THREE.ACESFilmicToneMapping;
+
+renderer.toneMappingExposure =
+1.4;
+
+document.body.appendChild(
+renderer.domElement
+);
+
+/////////////////////////////////////////////////////////
+// LIGHTS
+/////////////////////////////////////////////////////////
+
+scene.add(
+new THREE.AmbientLight(
+0xffffff,
+0.8
+)
+);
+
+const blueLight =
+new THREE.PointLight(
+0x00ffff,
+40,
+500
+);
+
+blueLight.position.set(
+50,
+40,
+40
+);
+
+scene.add(
+blueLight
+);
+
+/////////////////////////////////////////////////////////
+// STARFIELD
+/////////////////////////////////////////////////////////
+
+const starsGeo =
+new THREE.BufferGeometry();
+
+const stars=[];
+
+for(let i=0;i<30000;i++){
+
+stars.push(
+
+(Math.random()-0.5)*2000,
+(Math.random()-0.5)*2000,
+(Math.random()-0.5)*2000
+
+);
+
+}
+
+starsGeo.setAttribute(
+'position',
+new THREE.Float32BufferAttribute(
+stars,
+3
+)
+);
+
+const starsMat =
+new THREE.PointsMaterial({
+
+size:.7,
+color:0xffffff
+
+});
+
+scene.add(
+new THREE.Points(
+starsGeo,
+starsMat
+)
+);
+
+/////////////////////////////////////////////////////////
+// QUANTUM FOAM
+/////////////////////////////////////////////////////////
+
+const foamGeo =
+new THREE.BufferGeometry();
+
+const foamPos=[];
+
+for(let i=0;i<12000;i++){
+
+foamPos.push(
+
+(Math.random()-0.5)*300,
+(Math.random()-0.5)*300,
+(Math.random()-0.5)*300
+
+);
+
+}
+
+foamGeo.setAttribute(
+'position',
+new THREE.Float32BufferAttribute(
+foamPos,
+3
+)
+);
+
+const foam =
+new THREE.Points(
+
+foamGeo,
+
+new THREE.PointsMaterial({
+
+size:0.15,
+color:0x00ffff,
+transparent:true,
+opacity:.75
+
+})
+
+);
+
+scene.add(foam);
+
+/////////////////////////////////////////////////////////
+// WAVEFUNCTION CLOUD
+/////////////////////////////////////////////////////////
+
+const waveGroup =
+new THREE.Group();
+
+for(let i=0;i<1500;i++){
+
+const particle =
+new THREE.Mesh(
+
+new THREE.SphereGeometry(
+0.15,
+8,
+8
+),
+
+new THREE.MeshBasicMaterial({
+
+color:0x66ffff,
+transparent:true,
+opacity:.5
+
+})
+
+);
+
+const r =
+Math.random()*28;
+
+const theta =
+Math.random()*Math.PI*2;
+
+const phi =
+Math.random()*Math.PI;
+
+particle.position.set(
+
+r*Math.sin(phi)*Math.cos(theta),
+
+r*Math.sin(phi)*Math.sin(theta),
+
+r*Math.cos(phi)
+
+);
+
+waveGroup.add(
+particle
+);
+
+}
+
+scene.add(
+waveGroup
+);
+
+/////////////////////////////////////////////////////////
+// OBSERVED PARTICLE
+/////////////////////////////////////////////////////////
+
+const quantumParticle =
+new THREE.Mesh(
+
+new THREE.SphereGeometry(
+1.4,
+64,
+64
+),
+
+new THREE.MeshPhysicalMaterial({
+
+color:0xffffff,
+
+emissive:0x00ffff,
+emissiveIntensity:8,
+
+metalness:1,
+roughness:0
+
+})
+
+);
+
+scene.add(
+quantumParticle
+);
+
+/////////////////////////////////////////////////////////
+// BARRIER
+/////////////////////////////////////////////////////////
+
+const barrier =
+new THREE.Mesh(
+
+new THREE.BoxGeometry(
+2,
+40,
+40
+),
+
+new THREE.MeshPhysicalMaterial({
+
+color:0x00ffff,
+transparent:true,
+opacity:.12
+
+})
+
+);
+
+barrier.position.x=15;
+
+scene.add(barrier);
+
+/////////////////////////////////////////////////////////
+// ENTANGLEMENT NETWORK
+/////////////////////////////////////////////////////////
+
+const entangled=[];
+
+for(let i=0;i<60;i++){
+
+const p1 =
+new THREE.Mesh(
+
+new THREE.SphereGeometry(
+.25,
+16,
+16
+),
+
+new THREE.MeshBasicMaterial({
+
+color:0xff00ff
+
+})
+
+);
+
+const p2 =
+p1.clone();
+
+scene.add(p1);
+scene.add(p2);
+
+const line =
+new THREE.Line(
+
+new THREE.BufferGeometry(),
+
+new THREE.LineBasicMaterial({
+
+color:0x00ffff
+
+})
+
+);
+
+scene.add(line);
+
+entangled.push({
+p1,p2,line
+});
+
+}
+
+/////////////////////////////////////////////////////////
+// BLACK HOLE
+/////////////////////////////////////////////////////////
+
+const blackHole =
+new THREE.Mesh(
+
+new THREE.SphereGeometry(
+6,
+128,
+128
+),
+
+new THREE.MeshBasicMaterial({
+color:0x000000
+})
+
+);
+
+blackHole.position.set(
+35,
+0,
+0
+);
+
+scene.add(
+blackHole
+);
+
+/////////////////////////////////////////////////////////
+// ACCRETION DISK
+/////////////////////////////////////////////////////////
+
+const disk =
+new THREE.Mesh(
+
+new THREE.TorusGeometry(
+12,
+2,
+64,
+256
+),
+
+new THREE.MeshPhysicalMaterial({
+
+color:0xffaa33,
+
+emissive:0xff6600,
+emissiveIntensity:8,
+
+transparent:true,
+opacity:.92
+
+})
+
+);
+
+disk.position.copy(
+blackHole.position
+);
+
+disk.rotation.x=
+Math.PI/2;
+
+scene.add(
+disk
+);
+
+/////////////////////////////////////////////////////////
+// PHOTON RING
+/////////////////////////////////////////////////////////
+
+const photonRing =
+new THREE.Mesh(
+
+new THREE.TorusGeometry(
+7,
+0.3,
+32,
+300
+),
+
+new THREE.MeshBasicMaterial({
+
+color:0xffffff
+
+})
+
+);
+
+photonRing.position.copy(
+blackHole.position
+);
+
+photonRing.rotation.x=
+Math.PI/2;
+
+scene.add(
+photonRing
+);
+
+/////////////////////////////////////////////////////////
+// RELATIVISTIC JETS
+/////////////////////////////////////////////////////////
+
+const jetGeo =
+new THREE.CylinderGeometry(
+0.15,
+1.8,
+70,
+32
+);
+
+const jetMat =
+new THREE.MeshBasicMaterial({
+
+color:0x55ccff,
+transparent:true,
+opacity:.55
+
+});
+
+const jet1 =
+new THREE.Mesh(
+jetGeo,
+jetMat
+);
+
+jet1.position.copy(
+blackHole.position
+);
+
+jet1.position.y+=35;
+
+scene.add(jet1);
+
+const jet2 =
+jet1.clone();
+
+jet2.position.y-=70;
+
+scene.add(jet2);
+
+/////////////////////////////////////////////////////////
+
+let t = 0;
+
+function animate(){
+
+requestAnimationFrame(
+animate
+);
+
+t += 0.01;
+
+/////////////////////////////////////////////////
+// QUANTUM FOAM
+/////////////////////////////////////////////////
+
+foam.rotation.y += 0.0008;
+
+/////////////////////////////////////////////////
+// WAVEFUNCTION
+/////////////////////////////////////////////////
+
+waveGroup.rotation.y += 0.002;
+waveGroup.rotation.x += 0.0008;
+
+/////////////////////////////////////////////////
+// PARTICLE MOTION
+/////////////////////////////////////////////////
+
+quantumParticle.position.x =
+Math.sin(t)*14;
+
+quantumParticle.position.y =
+Math.cos(t*1.4)*8;
+
+quantumParticle.position.z =
+Math.sin(t*2)*6;
+
+/////////////////////////////////////////////////
+// COLLAPSE EFFECT
+/////////////////////////////////////////////////
+
+let collapse =
+
+0.5 +
+0.5*Math.sin(t*4);
+
+quantumParticle.scale.setScalar(
+1.0 + collapse*0.7
+);
+
+/////////////////////////////////////////////////
+// ENTANGLEMENT
+/////////////////////////////////////////////////
+
+entangled.forEach((e,n)=>{
+
+e.p1.position.set(
+
+Math.sin(t+n)*20,
+
+Math.cos(t*.9+n)*12,
+
+Math.sin(t*1.7+n)*12
+
+);
+
+e.p2.position.set(
+
+Math.cos(t+n)*20,
+
+Math.sin(t*1.3+n)*12,
+
+Math.cos(t*1.6+n)*12
+
+);
+
+e.line.geometry.setFromPoints([
+e.p1.position,
+e.p2.position
+]);
+
+});
+
+/////////////////////////////////////////////////
+// BLACK HOLE MOTION
+/////////////////////////////////////////////////
+
+disk.rotation.z += 0.02;
+photonRing.rotation.z -= 0.01;
+
+jet1.rotation.z += 0.003;
+jet2.rotation.z -= 0.003;
+
+/////////////////////////////////////////////////
+// SIMPLE LENSING ILLUSION
+/////////////////////////////////////////////////
+
+waveGroup.position.x =
+Math.sin(t*0.4)*1.5;
+
+/////////////////////////////////////////////////
+// CINEMATIC CAMERA
+/////////////////////////////////////////////////
+
+camera.position.x =
+Math.sin(t*0.12)*55;
+
+camera.position.y =
+Math.cos(t*0.05)*15;
+
+camera.position.z =
+80 +
+Math.cos(t*0.1)*15;
+
+camera.lookAt(
+15,
+0,
+0
+);
+
+renderer.render(
+scene,
+camera
+);
+
+}
+
+animate();
+
+</script>
+
+</body>
+</html>
